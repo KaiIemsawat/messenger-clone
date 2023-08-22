@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  // collection -> id type String, special decorator as id,
+  // default value as auto() that refer to _id in mongoDB type ObjectId
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  // String? <- type of optional String
+  name           String?
+  // @unique <- decorator as unique
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  hashedPassword String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  conversationIds String[]       @db.ObjectId
+  // a property which map conversation model as an array
+  // using conversationsIds refer to id of the conversation
+  conversations   Conversation[] @relation(fields: [conversationIds], references: [id])
+
+  seenMessageIds String[]  @db.ObjectId
+  // giving special name as "Seen"
+  seenMessages   Message[] @relation("Seen", field: [seenMessageIds], references: [id])
+}
