@@ -3,10 +3,12 @@
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useCallback, useState } from "react";
 import axios from "axios";
+import { signIn } from "next-auth/react";
 import Input from "@/app/components/inputs/Input";
 import Button from "@/app/components/Button";
 import AuthSocialBtn from "./AuthSocialBtn";
 import { BsGithub, BsGoogle } from "react-icons/bs";
+import { toast } from "react-hot-toast"; // having a popup with error message when there is an issue
 
 // Declare a custom 'type'
 type Variant = "LOGIN" | "REGISTER";
@@ -38,14 +40,33 @@ const AuthForm = () => {
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setIsLoading(true);
 
+        /* REGISTER - axios */
         if (variant === "REGISTER") {
-            // Axios Register
             // "/api/register" need to match with folder structure under app folder
-            axios.post("/api/register", data);
+            axios
+                .post("/api/register", data)
+                .catch(() => toast.error("Something went wrong!")) // Having a popup with error message when there is an issue
+                .finally(() => setIsLoading(false)); // After an error, the screen will be reset as 'setIsLoading()' is set to false
         }
 
+        /* LOGIN - NextAuth */
         if (variant === "LOGIN") {
-            // NextAuth Signin
+            // signIn() is imported from "next-auth/react"
+            // there are 3 signin options as in api/auth/[...nextauth]/route.ts
+
+            // signIn("credentials") <-- ("credentials") came from CredentialsProvider({name: credentials})
+            signIn("credentials", { ...data, redirect: false })
+                .then((callback) => {
+                    // if there is any issue
+                    if (callback?.error) {
+                        toast.error("Invalid Credentials");
+                    }
+                    // if OK (Note-- might need to change)
+                    else {
+                        toast.success("LOGGED IN");
+                    }
+                })
+                .finally(() => setIsLoading(false)); // After an error, the screen will be reset as 'setIsLoading()' is set to false
         }
     };
 
