@@ -45,6 +45,7 @@ const AuthForm = () => {
             // "/api/register" need to match with folder structure under app folder
             axios
                 .post("/api/register", data)
+                .then(() => toast.success("REGISTERED"))
                 .catch(() => toast.error("Something went wrong!")) // Having a popup with error message when there is an issue
                 .finally(() => setIsLoading(false)); // After an error, the screen will be reset as 'setIsLoading()' is set to false
         }
@@ -74,6 +75,14 @@ const AuthForm = () => {
         setIsLoading(true);
 
         // NextAuth social signin
+        // signin with github
+        signIn(action, { redirect: false }).then((callback) => {
+            if (callback?.error) {
+                toast.error("Invalid credentials");
+            } else {
+                toast.success("LOGGED IN WITH GITHUB ACCOUNT");
+            }
+        });
     };
 
     return (
