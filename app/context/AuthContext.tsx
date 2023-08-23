@@ -1,0 +1,14 @@
+"use client";
+
+// For handling session
+// <AuthContext> will be used in layout.tsx
+
+import { SessionProvider } from "next-auth/react";
+
+interface AuthContextProps {
+    children: React.ReactNode;
+}
+
+export default function AuthContext({ children }: AuthContextProps) {
+    return <SessionProvider>{children}</SessionProvider>;
+}

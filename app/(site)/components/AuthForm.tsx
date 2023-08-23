@@ -1,21 +1,31 @@
 "use client";
 
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Input from "@/app/components/inputs/Input";
 import Button from "@/app/components/Button";
 import AuthSocialBtn from "./AuthSocialBtn";
 import { BsGithub, BsGoogle } from "react-icons/bs";
 import { toast } from "react-hot-toast"; // having a popup with error message when there is an issue
+import { useRouter } from "next/navigation"; // make sure import from "next/navigation"
 
 // Declare a custom 'type'
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
+    const session = useSession();
+    const router = useRouter(); // make sure import from "next/navigation"
     const [variant, setVariant] = useState<Variant>("LOGIN");
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (session?.status === "authenticated") {
+            // console.log("authenticated"); // to check if user is logged in
+            router.push("/users");
+        }
+    }, [session?.status, router]);
 
     const toggleVariant = useCallback(() => {
         if (variant === "LOGIN") {
@@ -45,7 +55,7 @@ const AuthForm = () => {
             // "/api/register" need to match with folder structure under app folder
             axios
                 .post("/api/register", data)
-                .then(() => toast.success("REGISTERED"))
+                .then(() => signIn("credentials", data))
                 .catch(() => toast.error("Something went wrong!")) // Having a popup with error message when there is an issue
                 .finally(() => setIsLoading(false)); // After an error, the screen will be reset as 'setIsLoading()' is set to false
         }
@@ -64,6 +74,7 @@ const AuthForm = () => {
                     }
                     if (callback?.ok && !callback?.error) {
                         toast.success("LOGGED IN");
+                        router.push("/users");
                     }
                 })
                 .finally(() => setIsLoading(false)); // After an error, the screen will be reset as 'setIsLoading()' is set to false
