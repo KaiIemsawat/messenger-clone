@@ -76,13 +76,15 @@ const AuthForm = () => {
 
         // NextAuth social signin
         // signin with github
-        signIn(action, { redirect: false }).then((callback) => {
-            if (callback?.error) {
-                toast.error("Invalid credentials");
-            } else {
-                toast.success("LOGGED IN WITH GITHUB ACCOUNT");
-            }
-        });
+        signIn(action, { redirect: false })
+            .then((callback) => {
+                if (callback?.error) {
+                    toast.error("Invalid credentials");
+                } else {
+                    toast.success("LOGGED IN WITH GITHUB ACCOUNT");
+                }
+            })
+            .finally(() => setIsLoading(false));
     };
 
     return (
