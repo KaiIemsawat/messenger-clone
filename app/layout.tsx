@@ -24,6 +24,7 @@ export default function RootLayout({
             <body className={inter.className}>
                 <AuthContext>
                     <ToasterContext />
+                    {/* {children} must be in  <AuthContext></AuthContext> */}
                     {children}
                 </AuthContext>
             </body>
