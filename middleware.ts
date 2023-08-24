@@ -6,6 +6,7 @@ export default withAuth({
     },
 });
 
+// To protect using deeplink while user not logged in
 export const config = {
     matcher: ["/users/:path*"],
 };
