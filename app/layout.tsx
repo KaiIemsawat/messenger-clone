@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 
 import ToasterContext from "./context/ToasterContext";
 import AuthContext from "./context/AuthContext";
+import getUsers from "./actions/getUsers";
 
 const inter = Inter({ subsets: ["latin"] });
 
