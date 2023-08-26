@@ -36,7 +36,6 @@ export async function POST(request: Request) {
                     users: true,
                 },
             });
-
             return NextResponse.json(newConversation);
         }
 
@@ -56,13 +55,11 @@ export async function POST(request: Request) {
                 ],
             },
         });
-
         const singleConversation = existingConversations[0];
 
         if (singleConversation) {
             return NextResponse.json(singleConversation);
         }
-
         const newConversation = await prisma.conversation.create({
             data: {
                 users: {
