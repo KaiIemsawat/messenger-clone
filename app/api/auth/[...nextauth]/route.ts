@@ -9,7 +9,9 @@ import prisma from "@/app/libs/prismadb";
 
 export const authOptions: AuthOptions = {
     adapter: PrismaAdapter(prisma),
+
     // providers:[] provides 3 options --> GithubProvider(), GoogleProvider(), CredentialsProvider()
+    // These come when imported 'next-auth'
     providers: [
         GithubProvider({
             clientId: process.env.GITHUB_ID as string,
@@ -30,15 +32,16 @@ export const authOptions: AuthOptions = {
                 if (!credentials?.email || !credentials?.password) {
                     throw new Error("Invalid Credentials");
                 }
+                // confirm user is unique
                 const user = await prisma.user.findUnique({
                     where: {
                         email: credentials.email,
                     },
                 });
+                // Check if user credentials are valid
                 if (!user || !user?.hashedPassword) {
                     throw new Error("Invalid Credentials");
                 }
-
                 // check if password is correct
                 const isCorrectPassword = await bcrypt.compare(
                     credentials.password,
@@ -59,6 +62,6 @@ export const authOptions: AuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
 };
 
-const handler = NextAuth(authOptions);
+const handler = NextAuth(authOptions); // 'authOptions' is the one created above --> 'export const authOptions: AuthOptions'
 
 export { handler as GET, handler as POST };

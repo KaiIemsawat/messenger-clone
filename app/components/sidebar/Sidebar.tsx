@@ -10,7 +10,10 @@ export default async function Sidebar({
     const currentUser = await getCurrentUser();
     return (
         <div className="h-full">
-            <DesktopSidebar currentUser={currentUser!} />
+            <DesktopSidebar
+                currentUser={currentUser!}
+                // {currentUser!} --> Use '!' to tell that it's possible for 'currentUser' to be 'null'
+            />
             <MobileFooter />
             <main className="lg:pl-20 h-full">{children}</main>
         </div>

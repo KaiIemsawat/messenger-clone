@@ -57,7 +57,7 @@ const AuthForm = () => {
             // "/api/register" need to match with folder structure under app folder
             axios
                 .post("/api/register", data)
-                .then(() => signIn("credentials", data))
+                .then(() => signIn("credentials", data)) // Once registered, user will be signed in
                 .catch(() => toast.error("Something went wrong!")) // Having a popup with error message when there is an issue
                 .finally(() => setIsLoading(false)); // After an error, the screen will be reset as 'setIsLoading()' is set to false
         }
@@ -91,7 +91,7 @@ const AuthForm = () => {
         signIn(action, { redirect: false })
             .then((callback) => {
                 if (callback?.error) {
-                    toast.error("Invalid credentials");
+                    toast.error("Invalid Credentials");
                 }
                 if (callback?.ok && !callback?.error) {
                     toast.success("LOGGED IN");

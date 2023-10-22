@@ -18,6 +18,7 @@ const getCurrentUser = async () => {
 
         return currentUser;
     } catch (error: any) {
+        // Don't throw 'error'. This is a 'server' route, not an 'api' route
         return null;
     }
 };

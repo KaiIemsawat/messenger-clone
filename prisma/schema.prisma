@@ -12,7 +12,9 @@ datasource db {
 
 model User {
   // collection -> id type String, special decorator as id,
-  // default value as auto() that refer to _id in mongoDB type ObjectId
+  //                       @id <--- special decorator
+  //                            default value as auto() that refer to _id in mongoDB type ObjectId
+  //                                             map with '_id
   id             String    @id @default(auto()) @map("_id") @db.ObjectId
   // String? <- type of optional String
   name           String?
@@ -28,11 +30,14 @@ model User {
   // a property which map conversation model as an array
   // using conversationsIds refer to id of the conversation
   conversations   Conversation[] @relation(fields: [conversationIds], references: [id])
+  //              Conversation type is created below
 
   seenMessageIds String[]  @db.ObjectId
   // giving special name as "Seen"
   seenMessages   Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
+  //             Message type is created below
 
+  //       Account type is created below
   accounts Account[]
   messages Message[]
 }
@@ -44,7 +49,7 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  // @db.String is not same as String
+  // @db.String is not same as String, Thus, '@db.String' is required
   refresh_token     String? @db.String
   access_token      String? @db.String
   expires_at        Int?
@@ -53,9 +58,13 @@ model Account {
   id_token          String? @db.String
   session_state     String?
 
+  // define the relation of the 'account' with 'user'
+  //         relation to field 'userId'
+  //                                    references: 'id' (id from User model)
+  //                                                      'Cascade' effect when 'delete'
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId]) // combination of 'provider' and 'providerAccountId' need to be unique
 }
 
 model Conversation {
@@ -87,3 +96,6 @@ model Message {
   senderId       String       @db.ObjectId
   sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }
+
+// prisma commands
+// To push the schema -- npx prisma db push
