@@ -1,6 +1,6 @@
 "use client";
 
-import clsx from "clsx";
+import clsx from "clsx"; // clsx allows dynamic classes
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 import React from "react";
 
@@ -11,7 +11,7 @@ interface InputProps {
     required?: boolean;
     register: UseFormRegister<FieldValues>;
     errors: FieldErrors;
-    disable?: boolean;
+    disabled?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -21,7 +21,7 @@ const Input: React.FC<InputProps> = ({
     required,
     register,
     errors,
-    disable,
+    disabled,
 }) => {
     return (
         <div>
@@ -37,10 +37,11 @@ const Input: React.FC<InputProps> = ({
                         id={id}
                         type={type}
                         autoComplete={id}
-                        disabled={disable}
+                        disabled={disabled}
                         {...register(id, { required })}
                         // clsx allows dynamic classes
                         className={clsx(
+                            // form-input comes from plugin
                             `form-input
                             block
                             w-full
@@ -59,7 +60,7 @@ const Input: React.FC<InputProps> = ({
                             sm:text-sm
                             sm:leading-6`,
                             errors[id] && "focus:ring-rose-500",
-                            disable && "opacity-50 cursor-default"
+                            disabled && "opacity-50 cursor-default"
                         )}
                     />
                 </div>

@@ -9,7 +9,7 @@ interface ButtonProps {
     onClick?: () => void;
     secondary?: boolean;
     danger?: boolean;
-    disable?: boolean;
+    disabled?: boolean;
 }
 
 // .FC means Function Component.
@@ -21,13 +21,13 @@ const Button: React.FC<ButtonProps> = ({
     onClick,
     secondary,
     danger,
-    disable,
+    disabled,
 }) => {
     return (
         <button
             onClick={onClick}
             type={type}
-            disabled={disable}
+            disabled={disabled}
             className={clsx(
                 `flex
                 justify-center
@@ -39,7 +39,7 @@ const Button: React.FC<ButtonProps> = ({
                 focus-visible:outline
                 focus-visible:outline-2
                 focus-visible:outline-offset-2`,
-                disable && "opacity-50 cursor-default",
+                disabled && "opacity-50 cursor-default",
                 fullWidth && "w-full",
                 secondary ? "text-gray-900" : "text-white",
                 danger &&

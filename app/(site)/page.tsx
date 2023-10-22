@@ -2,6 +2,7 @@ import Image from "next/image";
 import AuthForm from "./components/AuthForm";
 
 // (site) folder with page.tsx can replace page.tsx that was directly under app folder
+// (site) serves as root. Special convention name structure
 export default function Home() {
     return (
         <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-100">

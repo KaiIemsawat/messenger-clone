@@ -1,4 +1,4 @@
-"use client";
+"use client"; // Next13 way of declare that this is client component
 
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
@@ -6,18 +6,19 @@ import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
 import Input from "@/app/components/inputs/Input";
 import Button from "@/app/components/Button";
-import AuthSocialBtn from "./AuthSocialBtn";
 import { BsGithub, BsGoogle } from "react-icons/bs";
 import { toast } from "react-hot-toast"; // having a popup with error message when there is an issue
 import { useRouter } from "next/navigation"; // make sure import from "next/navigation"
 
-// Declare a custom 'type'
+import AuthSocialBtn from "./AuthSocialBtn";
+
+// Declare a custom 'type'. This case means the 'LOGIN' or 'REGISTER' type
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
     const session = useSession();
     const router = useRouter(); // make sure import from "next/navigation"
-    const [variant, setVariant] = useState<Variant>("LOGIN");
+    const [variant, setVariant] = useState<Variant>("LOGIN"); // <Type casting>
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -38,7 +39,7 @@ const AuthForm = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors }, // destructure 'error' from 'formState'
     } = useForm<FieldValues>({
         defaultValues: {
             name: "",
@@ -48,6 +49,7 @@ const AuthForm = () => {
     });
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
+        // 'SubmitHandler' comes from 'react-hook-form'
         setIsLoading(true);
 
         /* REGISTER - axios */
@@ -101,14 +103,20 @@ const AuthForm = () => {
     return (
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
             <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
-                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+                <form
+                    className="space-y-6"
+                    // NOTE : onSubmit={handleSubmit(onSubmit)}
+                    // 'handleSubmit' come from 'useForm' and take 'onSubmit' function
+                    // so that we can get '(data)' -- (check onSubmit function for this)
+                    onSubmit={handleSubmit(onSubmit)}
+                >
                     {variant === "REGISTER" && (
                         <Input
                             id="name"
                             label="name"
                             register={register}
                             errors={errors}
-                            disable={isLoading}
+                            disabled={isLoading}
                         />
                     )}
                     <Input
@@ -117,7 +125,7 @@ const AuthForm = () => {
                         type="email"
                         register={register}
                         errors={errors}
-                        disable={isLoading}
+                        disabled={isLoading}
                     />
                     <Input
                         id="password"
@@ -125,26 +133,46 @@ const AuthForm = () => {
                         type="password"
                         register={register}
                         errors={errors}
-                        disable={isLoading}
+                        disabled={isLoading}
                     />
                     <div>
-                        <Button disable={isLoading} fullWidth type="submit">
+                        <Button
+                            disabled={isLoading}
+                            fullWidth // a prop from 'Button' component
+                            type="submit" // this way we don't need the explicite function. Since it is in <form>, once clicked, it will tricker 'onSubmit' function
+                        >
                             {variant === "LOGIN" ? "Sign in" : "Register"}
                         </Button>
                     </div>
                 </form>
+
                 <div className="mt-6">
-                    <div className="relative">
-                        {/* Use absolute to keep the line in absolute position */}
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-300" />
+                    <div
+                        // This is the element of text with line says 'Or continue with'
+                        className="relative"
+                    >
+                        <div
+                            // Use 'absolute' to keep the line in absolute position
+                            className="absolute inset-0 flex items-center"
+                        >
+                            <div
+                                // This <div> is used to create a line
+                                className="w-full border-t border-gray-300"
+                            />
                         </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="bg-white px-2 text-gray-500">
+                        <div
+                            // This is the text part
+                            className="relative flex justify-center text-sm"
+                        >
+                            <span
+                                // a text with white border
+                                className="bg-white px-2 text-gray-500"
+                            >
                                 Or continue with
                             </span>
                         </div>
                     </div>
+
                     <div className="mt-6 flex gap-2">
                         <AuthSocialBtn
                             icon={BsGithub}
@@ -156,7 +184,11 @@ const AuthForm = () => {
                         />
                     </div>
                 </div>
-                <div className="flex gap-2 justify-center text-sm mt-6 px-2 text-gray-500">
+
+                <div
+                    // Element where note message ask if user want to login or register
+                    className="flex gap-2 justify-center text-sm mt-6 px-2 text-gray-500"
+                >
                     <div>
                         {variant === "LOGIN"
                             ? "New to Messenger?"

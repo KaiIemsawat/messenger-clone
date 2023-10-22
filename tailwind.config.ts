@@ -10,6 +10,7 @@ const config: Config = {
         extend: {},
     },
     plugins: [
+        // need to declare this once plugin is installed
         require("@tailwindcss/forms")({
             strategy: "class",
         }),

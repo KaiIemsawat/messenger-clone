@@ -6,7 +6,7 @@ interface AuthSocialBtnProps {
 }
 
 const AuthSocialBtn: React.FC<AuthSocialBtnProps> = ({
-    icon: Icon,
+    icon: Icon, // remap 'icon' to 'Icon' so we can use it as component
     onClick,
 }) => {
     return (
@@ -32,5 +32,7 @@ const AuthSocialBtn: React.FC<AuthSocialBtnProps> = ({
         </button>
     );
 };
-
+// Basically, this button component will take 2 props
+// 1 - onClick
+// 2 - icon (Icon). And in usage (in AuthForm.tsx), it will be declared
 export default AuthSocialBtn;
