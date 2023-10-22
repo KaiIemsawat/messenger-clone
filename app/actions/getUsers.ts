@@ -13,6 +13,7 @@ const getUsers = async () => {
                 createdAt: "desc",
             },
             where: {
+                // Where the email is not the curent user
                 NOT: {
                     email: session.user.email,
                 },
