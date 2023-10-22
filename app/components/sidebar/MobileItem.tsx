@@ -37,6 +37,7 @@ const MobileItem: React.FC<MobileItemProps> = ({
                 p-4 
                 text-gray-500 
                 hover:text-black hover:bg-gray-100
+                duration-500
                 `,
                 active && "bg-gray-100 text-black"
             )}
