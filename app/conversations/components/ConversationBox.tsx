@@ -25,8 +25,8 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
     const router = useRouter();
 
     const handleClick = useCallback(() => {
-        router.push(`/conversation/${data.id}`);
-    }, [data.id, router]);
+        router.push(`/conversations/${data.id}`);
+    }, [data, router]);
 
     const lastMessage = useMemo(() => {
         const messages = data.message || [];
@@ -53,7 +53,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
     }, [userEmail, lastMessage]);
 
     const lastMessageText = useMemo(() => {
-        if (!lastMessage?.image) {
+        if (lastMessage?.image) {
             return "Sent an image";
         }
         if (lastMessage?.body) {
@@ -77,11 +77,27 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
                 rounded-lg
                 transition
                 cursor-pointer
+                p-3
             `,
                 selected ? "bg-neutral-100" : "bg-white"
             )}
         >
             <Avatar user={otherUser} />
+            <div className="min-w-0 flex-1">
+                <div className="focus:outline-none">
+                    <div className="flex justify-between items-center mb-1">
+                        <p className="text-md font-medium text-gray-900">
+                            {data.name || otherUser.name}
+                        </p>
+                        {lastMessage?.createdAt && (
+                            <p className="text-xs text-gray-400 font-light">
+                                {format(new Date(lastMessage.createdAt), "p")}
+                            </p>
+                        )}
+                    </div>
+                    <p>{lastMessageText}</p>
+                </div>
+            </div>
         </div>
     );
 };
